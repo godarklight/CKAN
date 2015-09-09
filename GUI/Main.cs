@@ -160,7 +160,7 @@ namespace CKAN
 
             controlFactory = new ControlFactory();
             Instance = this;
-            mainModList = new MainModList(source => UpdateFilters(this), TooManyModsProvide, User);
+            mainModList = new MainModList(source => UpdateFilters(this), TooManyModsProvide , User);
             InitializeComponent();
 
             // We need to initialize error dialog first to display errors
@@ -643,7 +643,7 @@ namespace CKAN
             ModList.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
 
-        private async void ModList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void ModList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (mainModList.ModFilter == GUIModFilter.Incompatible)
             {
@@ -684,11 +684,13 @@ namespace CKAN
                 }
 
                 var registry = registry_manager.registry;
-                await UpdateChangeSetAndConflicts(registry);
+                Task thingy = new Task(() => UpdateChangeSetAndConflicts(registry));
+                thingy.Start();
+                thingy.Wait();
             }
         }
 
-        private async Task UpdateChangeSetAndConflicts(IRegistryQuerier registry)
+        private void UpdateChangeSetAndConflicts(IRegistryQuerier registry)
         {
             IEnumerable<KeyValuePair<GUIMod, GUIModChangeType>> full_change_set = null;
             Dictionary<GUIMod, string> new_conflicts = null;
@@ -698,9 +700,8 @@ namespace CKAN
             try
             {
                 var module_installer = ModuleInstaller.GetInstance(CurrentInstance, GUI.user);
-                full_change_set =
-                    await mainModList.ComputeChangeSetFromModList(registry, user_change_set, module_installer,
-                    CurrentInstance.Version());
+                var thingy = mainModList.ComputeChangeSetFromModList(registry, user_change_set, module_installer, CurrentInstance.Version());
+                full_change_set = thingy;
             }
             catch (InconsistentKraken)
             {
@@ -717,7 +718,9 @@ namespace CKAN
             }
             if (too_many_provides_thrown)
             {
-                await UpdateChangeSetAndConflicts(registry);
+                var thingy = new Task(() => UpdateChangeSetAndConflicts(registry));
+                thingy.Start();
+                thingy.Wait();
                 new_conflicts = Conflicts;
                 full_change_set = ChangeSet;
             }

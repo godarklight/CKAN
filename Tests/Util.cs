@@ -8,6 +8,7 @@ using NUnit.Framework;
 
 namespace Tests
 {
+    /*
     [TestFixture] public class Util
     {
         [Test]
@@ -16,6 +17,7 @@ namespace Tests
             UtilStatic.AssertNoAsyncVoidMethods(GetType().Assembly);
         }
     }
+    */
 
     public static class UtilStatic
     {
@@ -24,6 +26,7 @@ namespace Tests
             return method.GetCustomAttributes(typeof (TAttribute), false).Any();
         }
 
+        /*
         public static void AssertNoAsyncVoidMethods(Assembly assembly)
         {
             var messages = assembly
@@ -36,7 +39,9 @@ namespace Tests
             Assert.False(messages.Any(),
                 "Async void methods found!" + Environment.NewLine + String.Join(Environment.NewLine, messages));
         }
+        */
 
+        /*
         private static IEnumerable<MethodInfo> GetAsyncVoidMethods(this Assembly assembly)
         {
             return assembly.GetLoadableTypes()
@@ -49,6 +54,7 @@ namespace Tests
                 .Where(method => method.HasAttribute<AsyncStateMachineAttribute>())
                 .Where(method => method.ReturnType == typeof (void));
         }
+        */
 
         private static IEnumerable<Type> GetLoadableTypes(this Assembly assembly)
         {
@@ -63,17 +69,5 @@ namespace Tests
             }
         }
 
-        public static async Task Throws<T>(Func<Task> async) where T : Exception
-        {
-            try
-            {
-                await async();
-                Assert.Fail("Expected exception of type: {0}", typeof (T));
-            }
-            catch (T)
-            {
-                return;
-            }
-        }
     }
 }

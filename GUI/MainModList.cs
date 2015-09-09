@@ -244,7 +244,7 @@ namespace CKAN
         public delegate void ModFiltersUpdatedEvent(MainModList source);
 
         //TODO Move to relationship resolver and have it use this.
-        public delegate Task<CkanModule> HandleTooManyProvides(TooManyModsProvideKraken kraken);
+        public delegate CkanModule HandleTooManyProvides(TooManyModsProvideKraken kraken);
 
         public event ModFiltersUpdatedEvent ModFiltersUpdated;
         public ReadOnlyCollection<GUIMod> Modules { get; set; }
@@ -297,7 +297,7 @@ namespace CKAN
         /// <param name="changeSet"></param>
         /// <param name="installer">A module installer for the current KSP install</param>
         /// <param name="version">The version of the current KSP install</param>
-        public async Task<IEnumerable<KeyValuePair<GUIMod, GUIModChangeType>>> ComputeChangeSetFromModList(
+        public IEnumerable<KeyValuePair<GUIMod, GUIModChangeType>> ComputeChangeSetFromModList(
             IRegistryQuerier registry, HashSet<KeyValuePair<GUIMod, GUIModChangeType>> changeSet, ModuleInstaller installer,
             KSPVersion version)
         {
@@ -354,7 +354,7 @@ namespace CKAN
                     return null;
                 }
                 //Shouldn't get here unless there is a kraken.
-                var mod = await too_many_provides(kraken);
+                var mod = too_many_provides(kraken);
                 if (mod != null)
                 {
                     modules_to_install.Add(mod);

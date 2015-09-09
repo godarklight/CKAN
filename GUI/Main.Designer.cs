@@ -1387,7 +1387,7 @@ namespace CKAN
         private TextBox LogTextBox;
         private ProgressBar DialogProgressBar;
         private TextBox MessageTextBox;
-        private DataGridViewCheckBoxColumn UpdateCol;
+        //private DataGridViewCheckBoxColumn UpdateCol;
         private TabPage ChangesetTabPage;
         private Button CancelChangesButton;
         private Button ConfirmChangesButton;
@@ -1429,7 +1429,7 @@ namespace CKAN
         public MainModListGUI ModList;
         private TableLayoutPanel MetaDataLowerLayoutPanel;
         private DataGridViewCheckBoxColumn Installed;
-        private DataGridViewCheckBoxColumn Update;
+        private new DataGridViewCheckBoxColumn Update;
         private DataGridViewTextBoxColumn ModName;
         private DataGridViewTextBoxColumn Author;
         private DataGridViewTextBoxColumn InstalledVersion;
